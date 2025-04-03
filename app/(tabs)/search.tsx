@@ -4,6 +4,7 @@ import SearchBar from '@/components/SearchBar';
 import { icons } from '@/constants/icons';
 import { images } from '@/constants/images';
 import { fecthMovies } from '@/services/api';
+import { updateSearchCount } from '@/services/appwrite';
 import useFetch from '@/services/useFetch';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, FlatList, ActivityIndicator } from 'react-native';
@@ -21,19 +22,26 @@ const SearchScreen = () => {
         query: searchQuery
     }), false)
 
-    useEffect(()=>{
-        const timeoutId = setTimeout(async ()=> {
-            if(searchQuery.trim()){
-             await loadMovies()
+    useEffect(() => {
+
+        const timeoutId = setTimeout(async () => {
+            if (searchQuery.trim()) {
+                await loadMovies()
             } else {
                 reset()
             }
         }, 1000)
-        
+
         return () => clearTimeout(timeoutId)
-        
+
 
     }, [searchQuery])
+
+    useEffect(() => {
+        if (movies?.length > 0 && movies?.[0]) {
+            updateSearchCount(searchQuery, movies[0])
+        }
+    }, [movies])
 
     return (
         <View className='flex-1 bg-primary'>
@@ -58,7 +66,7 @@ const SearchScreen = () => {
                 }}
                 className='px-5 pb-32'
                 contentContainerStyle={{
-                    paddingBottom:20
+                    paddingBottom: 20
                 }}
                 ListHeaderComponent={
                     <>
@@ -71,18 +79,18 @@ const SearchScreen = () => {
                         </View>
                         <View className='my-5'>
                             <SearchBar
-                                placeholder='Search movies...' 
+                                placeholder='Search movies...'
                                 value={searchQuery}
-                                onChangeText={(text: string)=> setSearchQuery(text)}
-                                />
+                                onChangeText={(text: string) => setSearchQuery(text)}
+                            />
 
                         </View>
                         {
                             moviesLoading && (
-                                <ActivityIndicator 
-                                size="large"
-                                color='#0000ff'
-                                className='my-3'
+                                <ActivityIndicator
+                                    size="large"
+                                    color='#0000ff'
+                                    className='my-3'
                                 />
                             )
                         }
@@ -109,7 +117,7 @@ const SearchScreen = () => {
                             <Text className='text-center text-gray-500'>{searchQuery.trim() ? 'No movies found' : 'Serach for a movie'}</Text>
 
                         </View>
-                    ): null
+                    ) : null
                 }
             />
         </View>
