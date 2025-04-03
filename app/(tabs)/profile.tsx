@@ -1,16 +1,16 @@
-//import liraries
-import React from 'react';
-import { View, Text } from 'react-native';
+import { icons } from "@/constants/icons";
+import { View, Text, Image } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-// create a component
 const Profile = () => {
-    return (
-        <View>
-            <Text>Profile</Text>
-        </View>
-    );
+  return (
+    <SafeAreaView className="bg-primary flex-1 px-10">
+      <View className="flex justify-center items-center flex-1 flex-col gap-5">
+        <Image source={icons.person} className="size-10" tintColor="#fff" />
+        <Text className="text-gray-500 text-base">Profile</Text>
+      </View>
+    </SafeAreaView>
+  );
 };
 
-
-//make this component available to the app
 export default Profile;
